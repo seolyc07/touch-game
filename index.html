@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>터치 웹 게임</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #target {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        #score {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="target"></div>
+    </div>
+    <div id="score">점수: 0</div>
+    <div id="timer">시간: <span id="time-remaining">60</span> 초</div>
+
+    <script>
+        // JavaScript 코드
+        const gameContainer = document.getElementById('game-container');
+        const target = document.getElementById('target');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('time-remaining');
+
+        let score = 0;
+        let timeRemaining = 60; // 초 단위로 시간 설정
+
+        function moveTarget() {
+            const maxX = gameContainer.clientWidth - target.clientWidth;
+            const maxY = gameContainer.clientHeight - target.clientHeight;
+
+            const newX = Math.floor(Math.random() * maxX);
+            const newY = Math.floor(Math.random() * maxY);
+
+            target.style.transform = `translate(${newX}px, ${newY}px)`;
+        }
+
+        function increaseScore() {
+            score += 1;
+            scoreDisplay.textContent = `점수: ${score}`;
+            moveTarget();
+        }
+
+        target.addEventListener('click', () => {
+            increaseScore();
+        });
+
+        // 타이머 설정
+        const timerInterval = setInterval(() => {
+            timeRemaining -= 1;
+            timerDisplay.textContent = `시간: ${timeRemaining} 초`;
+
+            if (timeRemaining === 0) {
+                clearInterval(timerInterval);
+                target.style.display = 'none'; // 게임 종료 시 빨간 원 숨기기 등의 추가 동작 가능
+                alert(`게임 종료! 최종 점수: ${score}`);
+            }
+        }, 1000); // 1초마다 감소
+
+        // 초기화
+        setInterval(moveTarget, 1000); // 0.5초마다 움직임
+    </script>
+</body>
+</html>
